@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV File</title>
+</head>
+<body>
+    <h1>Upload CSV File</h1>
+    <form action="http://localhost:5000/api/file-import" method="post" enctype="multipart/form-data">
+        <label for="file">Select CSV File:</label>
+        <input type="file" id="file" name="files" accept=".csv" required><br><br>
+
+        <label for="create_usr_id">User ID:</label>
+        <input type="text" id="create_usr_id" name="create_usr_id" required><br><br>
+
+        <label for="schema">Schema:</label>
+        <input type="text" id="schema" name="schema" value="public" required><br><br>
+
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
