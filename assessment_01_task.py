@@ -18,15 +18,15 @@ def data(conn, csv_file, table_name, chunk_size=10000):
     try:
         cursor = conn.cursor()
         with open(csv_file, 'r') as f:
-            # Skip the header
+         
             next(f)
             while True:
-                # Read chunk_size lines from the file
+                
                 lines = ''.join(f.readlines(chunk_size))
                 if not lines:
-                    break  # Break if no more lines to read
+                    break  
                 cursor.copy_from(f, table_name, sep=',', null='')
-                conn.commit()  # Commit the transaction for each chunk
+                conn.commit()  
         print("Data save complete.")
     except psycopg2.Error as e:
         print("Error inserting data:", e)
