@@ -5,28 +5,35 @@ def cont_postgres():
         conn = psycopg2.connect(
             dbname="test",
             user="postgres",
-            password="root123",
+            password="password",
             host="localhost",
             port="5432"
         )
         return conn
     except psycopg2.Error as e:
-        print("connecting to Error:", e)
+        print("Error connecting:", e)
         return None
 
-def data(conn, csv_file, table_name):
+def data(conn, csv_file, table_name, chunk_size=10000):
     try:
         cursor = conn.cursor()
         with open(csv_file, 'r') as f:
-            cursor.copy_expert(f"COPY {table_name} FROM STDIN CSV HEADER", f)
-        conn.commit()
+            # Skip the header
+            next(f)
+            while True:
+                # Read chunk_size lines from the file
+                lines = ''.join(f.readlines(chunk_size))
+                if not lines:
+                    break  # Break if no more lines to read
+                cursor.copy_from(f, table_name, sep=',', null='')
+                conn.commit()  # Commit the transaction for each chunk
         print("Data save complete.")
     except psycopg2.Error as e:
-        print("Error data:", e)
+        print("Error inserting data:", e)
 
 def main():
-    csv_file ='D:\\python\\Book1.csv'
-    table_name ='public.test_table'
+    csv_file = 'D:\\python\\Book1.csv'
+    table_name = 'public.test_table'
     conn = cont_postgres()
     if conn is None:
         return
